@@ -1,10 +1,13 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from pydantic import BaseModel
-from typing import List, Optional
-import os
+from typing import List
 from dotenv import load_dotenv
-from groq import Groq
 from fastapi.middleware.cors import CORSMiddleware
+
+# Import service layer
+from services.interview_service import InterviewService
+from services.audio_service import AudioService
+from services.pdf_service import PDFService
 
 load_dotenv()
 
@@ -19,58 +22,81 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+# Initialize services
+interview_service = InterviewService()
+audio_service = AudioService()
+pdf_service = PDFService()
 
 # Data Models
 class InterviewContext(BaseModel):
     resume_text: str
     job_description: str
+    candidate_name: str
     messages: List[dict] # List of {"role": "user" | "assistant", "content": "..."}
+    difficulty: str = "medium"  # easy, medium, or hard
 
 @app.post("/chat")
 async def chat_endpoint(context: InterviewContext):
-    
-    # 1. Construct the System Prompt
-    # This is the "Brain" logic. We inject the resume and JD dynamically.
-    system_prompt = f"""
-    You are an expert technical interviewer for a software engineering role.
-    
-    JOB DESCRIPTION:
-    {context.job_description}
-    
-    CANDIDATE RESUME:
-    {context.resume_text}
-    
-    INSTRUCTIONS:
-    1. Conduct a professional, semi-technical interview based on the requirements above.
-    2. Start by asking the candidate to introduce themselves if it's the start of the conversation.
-    3. Ask ONE question at a time.
-    4. Keep your responses concise (under 3 sentences) because this will be spoken aloud later.
-    5. Do not just list questions; react to the candidate's answers.
-    6. If the candidate gives a vague answer, dig deeper.
     """
-
-    # 2. Prepare the messages list for Groq
-    # We put the system prompt first, then append the conversation history
-    api_messages = [{"role": "system", "content": system_prompt}] + context.messages
-
+    Main chat endpoint for the AI interviewer.
+    Generates interview questions and responses with audio.
+    """
     try:
-        # 3. Call Groq (Llama 3 8b is fast and free)
-        completion = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
-            messages=api_messages,
-            temperature=0.6,
-            max_tokens=250,
-            top_p=1,
-            stream=False,
+        response_text, audio_data = interview_service.process_interview_turn(
+            resume_text=context.resume_text,
+            job_description=context.job_description,
+            candidate_name=context.candidate_name,
+            messages=context.messages,
+            difficulty=context.difficulty
         )
         
-        bot_response = completion.choices[0].message.content
-        return {"response": bot_response}
-
+        return {
+            "response": response_text,
+            "audio": audio_data
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/transcribe")
+async def transcribe_audio(file: UploadFile = File(...)):
+    """
+    Transcribe audio to text using Deepgram STT.
+    """
+    try:
+        audio_data = await file.read()
+        transcript = audio_service.transcribe_audio(audio_data)
+        return {"transcript": transcript}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+@app.post("/process-pdf")
+async def process_pdf(file: UploadFile = File(...)):
+    """
+    Process a PDF file and extract text.
+    """
+    try:
+        content = await file.read()
+        text = pdf_service.process_pdf(content)
+        return {"text": text}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+       
+
+@app.post("/feedback")
+async def feedback_endpoint(context: InterviewContext):
+    """
+    Generate feedback based on the interview conversation.
+    """
+    try:
+        feedback = interview_service.generate_feedback(context.messages)
+        return feedback
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
