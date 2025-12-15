@@ -338,18 +338,24 @@ class InterviewService:
             
             options = {
                 "model": "aura-asteria-en",
-                "encoding": "linear16",
-                "container": "wav"
             }
             
-            filename = f"temp_{uuid.uuid4()}.wav"
-            self.deepgram_client.speak.rest.v("1").save(filename, {"text": sanitized_text}, options)
+            response = self.deepgram_client.speak.v("1").save(
+                f"temp_{uuid.uuid4()}.wav",
+                {"text": sanitized_text},
+                options
+            )
             
+            # Read the saved audio file
+            filename = response.filename
             with open(filename, "rb") as audio_file:
                 audio_data = audio_file.read()
                 base64_audio = base64.b64encode(audio_data).decode("utf-8")
             
-            os.remove(filename)
+            # Clean up the temporary file
+            if os.path.exists(filename):
+                os.remove(filename)
+            
             return base64_audio
             
         except Exception as e:

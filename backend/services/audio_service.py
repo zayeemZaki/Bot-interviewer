@@ -23,11 +23,14 @@ class AudioService:
             raise ValueError("Empty audio file provided")
         
         try:
-            # Use the v1 media API to transcribe file
-            response = self.client.listen.v1.media.transcribe_file(
-                audio_data,
-                model="nova-2",
-                smart_format=True,
+            options = {
+                "model": "nova-2",
+                "smart_format": True,
+            }
+            
+            response = self.client.listen.prerecorded.v("1").transcribe_file(
+                {"buffer": audio_data},
+                options
             )
             
             transcript = response.results.channels[0].alternatives[0].transcript
