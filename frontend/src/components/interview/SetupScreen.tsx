@@ -1,4 +1,5 @@
 import { ChangeEvent } from "react";
+import { FileText, Briefcase, Play, Clock, Target, User } from "lucide-react";
 
 interface SetupScreenProps {
   name: string;
@@ -21,8 +22,6 @@ export default function SetupScreen({
   setName,
   jobDescription,
   setJobDescription,
-  resume,
-  setResume,
   duration,
   setDuration,
   difficulty,
@@ -32,32 +31,39 @@ export default function SetupScreen({
   loading,
 }: SetupScreenProps) {
   return (
-    <div className="w-full max-w-2xl bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
-      {/* Card Header */}
-      <div className="bg-gradient-to-r from-slate-900 to-slate-800 px-6 py-5">
-        <h2 className="text-xl font-semibold text-white">Setup Your Interview</h2>
-        <p className="text-slate-300 text-sm mt-1">Fill in your details to begin the practice session</p>
+    <div className="w-full max-w-3xl bg-white rounded-xl shadow-sm border border-slate-200">
+      {/* Header */}
+      <div className="border-b border-slate-200 px-6 sm:px-8 py-6">
+        <h2 className="text-2xl font-semibold text-slate-900">Configure interview preferences</h2>
       </div>
 
-      {/* Card Content */}
-      <div className="p-6 space-y-5">
+      {/* Form Content */}
+      <div className="p-6 sm:p-8 space-y-8">
         {/* Name Input */}
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-2">Your Name</label>
+        <div className="space-y-2">
+          <label htmlFor="name" className="flex items-center gap-2 text-sm font-medium text-slate-900">
+            <User className="w-4 h-4 text-slate-500" />
+            Your Name
+          </label>
           <input
+            id="name"
             type="text"
-            className="w-full px-4 py-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white text-slate-900 placeholder:text-slate-400"
-            placeholder="e.g. Zayeem Zaki"
+            className="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all"
+            placeholder="e.g. John Doe"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
 
         {/* Job Description */}
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-2">Job Description</label>
+        <div className="space-y-2">
+          <label htmlFor="job-description" className="flex items-center gap-2 text-sm font-medium text-slate-900">
+            <Briefcase className="w-4 h-4 text-slate-500" />
+            Job Description
+          </label>
           <textarea
-            className="w-full px-4 py-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none bg-white text-slate-900 placeholder:text-slate-400 h-28"
+            id="job-description"
+            className="flex min-h-[120px] w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none transition-all"
             placeholder="Paste the job description here..."
             value={jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
@@ -65,47 +71,45 @@ export default function SetupScreen({
         </div>
 
         {/* Resume Upload */}
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-2">Resume</label>
-          
-          {/* File Input */}
-          <div className="mb-3">
-            <input
-              type="file"
-              accept=".pdf"
-              onChange={handleFileChange}
-              className="block w-full text-sm text-slate-600
-                        file:mr-4 file:py-2.5 file:px-4
-                        file:rounded-lg file:border-0
-                        file:text-sm file:font-semibold
-                        file:bg-slate-100 file:text-slate-700
-                        hover:file:bg-slate-200
-                        file:transition-colors file:cursor-pointer
-                        cursor-pointer"
-            />
-          </div>
-
-          {/* Text Area */}
-          <label className="block text-xs font-medium text-slate-500 mb-2">
-            Or paste/edit your resume text:
+        <div className="space-y-3">
+          <label className="flex items-center gap-2 text-sm font-medium text-slate-900">
+            <FileText className="w-4 h-4 text-slate-500" />
+            Resume
           </label>
-          <textarea
-            className="w-full px-4 py-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none bg-white text-slate-900 placeholder:text-slate-400 h-28"
-            placeholder="Resume text will appear here..."
-            value={resume}
-            onChange={(e) => setResume(e.target.value)}
-          />
+          
+          {/* File Upload */}
+          <div className="flex items-center justify-center w-full">
+            <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded-md cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors">
+              <div className="flex flex-col items-center justify-center pt-5 pb-6 px-4">
+                <FileText className="w-8 h-8 mb-2 text-slate-400" />
+                <p className="mb-1 text-sm text-slate-600">
+                  <span className="font-semibold">Click to upload</span> or drag and drop
+                </p>
+                <p className="text-xs text-slate-500">PDF files only</p>
+              </div>
+              <input
+                type="file"
+                accept=".pdf"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+            </label>
+          </div>
         </div>
 
-        {/* Grid for Duration and Difficulty */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Duration and Difficulty Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           {/* Duration */}
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">Duration</label>
+          <div className="space-y-2">
+            <label htmlFor="duration" className="flex items-center gap-2 text-sm font-medium text-slate-900">
+              <Clock className="w-4 h-4 text-slate-500" />
+              Duration
+            </label>
             <select
+              id="duration"
               value={duration}
               onChange={(e) => setDuration(Number(e.target.value))}
-              className="w-full px-4 py-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white text-slate-900 cursor-pointer"
+              className="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer transition-all"
             >
               <option value={5}>5 Minutes</option>
               <option value={15}>15 Minutes</option>
@@ -115,16 +119,20 @@ export default function SetupScreen({
           </div>
 
           {/* Difficulty */}
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">Difficulty</label>
+          <div className="space-y-2">
+            <label htmlFor="difficulty" className="flex items-center gap-2 text-sm font-medium text-slate-900">
+              <Target className="w-4 h-4 text-slate-500" />
+              Difficulty
+            </label>
             <select
+              id="difficulty"
               value={difficulty}
               onChange={(e) => setDifficulty(e.target.value)}
-              className="w-full px-4 py-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white text-slate-900 cursor-pointer"
+              className="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer transition-all"
             >
-              <option value="easy">🌱 Easy</option>
-              <option value="medium">⚡ Medium</option>
-              <option value="hard">🔥 Hard</option>
+              <option value="easy">Beginner Mode</option>
+              <option value="medium">Pro Mode</option>
+              <option value="hard">Roast Mode</option>
             </select>
           </div>
         </div>
@@ -133,9 +141,19 @@ export default function SetupScreen({
         <button
           onClick={startInterview}
           disabled={loading}
-          className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3.5 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transform hover:-translate-y-0.5"
+          className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-slate-900 text-white hover:bg-slate-800 h-11 px-8 w-full"
         >
-          {loading ? "Setting up..." : "Start Interview"}
+          {loading ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              Setting up...
+            </>
+          ) : (
+            <>
+              <Play className="w-4 h-4" />
+              Start Interview
+            </>
+          )}
         </button>
       </div>
     </div>

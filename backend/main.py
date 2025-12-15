@@ -3,8 +3,6 @@ from pydantic import BaseModel
 from typing import List
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
-
-# Import service layer
 from services.interview_service import InterviewService
 from services.audio_service import AudioService
 from services.pdf_service import PDFService
@@ -13,7 +11,6 @@ load_dotenv()
 
 app = FastAPI()
 
-# Enable CORS so the frontend can talk to the backend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -22,18 +19,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize services
 interview_service = InterviewService()
 audio_service = AudioService()
 pdf_service = PDFService()
 
-# Data Models
 class InterviewContext(BaseModel):
     resume_text: str
     job_description: str
     candidate_name: str
-    messages: List[dict] # List of {"role": "user" | "assistant", "content": "..."}
-    difficulty: str = "medium"  # easy, medium, or hard
+    messages: List[dict]
+    difficulty: str = "medium"
 
 @app.post("/chat")
 async def chat_endpoint(context: InterviewContext):
