@@ -16,7 +16,7 @@ class AudioService:
         if not self.api_key:
             raise ValueError("DEEPGRAM_API_KEY not found in environment")
         
-        self.client = DeepgramClient(self.api_key)
+        self.client = DeepgramClient(api_key=self.api_key)
     
     def transcribe_audio(self, audio_data: bytes) -> str:
         if not audio_data or len(audio_data) == 0:
