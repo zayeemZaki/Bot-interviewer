@@ -340,14 +340,12 @@ class InterviewService:
                 "model": "aura-asteria-en",
             }
             
-            response = self.deepgram_client.speak.v("1").save(
-                f"temp_{uuid.uuid4()}.wav",
-                {"text": sanitized_text},
-                options
-            )
+            filename = f"temp_{uuid.uuid4()}.wav"
+            
+            # Use SDK v3 REST syntax
+            self.deepgram_client.speak.rest.v("1").save(filename, {"text": sanitized_text}, options)
             
             # Read the saved audio file
-            filename = response.filename
             with open(filename, "rb") as audio_file:
                 audio_data = audio_file.read()
                 base64_audio = base64.b64encode(audio_data).decode("utf-8")

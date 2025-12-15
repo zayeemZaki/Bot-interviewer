@@ -4,7 +4,7 @@ Handles speech-to-text (STT) using Deepgram.
 """
 
 import os
-from deepgram import DeepgramClient
+from deepgram import DeepgramClient, PrerecordedOptions, FileSource
 from typing import Optional
 
 
@@ -23,15 +23,16 @@ class AudioService:
             raise ValueError("Empty audio file provided")
         
         try:
-            options = {
-                "model": "nova-2",
-                "smart_format": True,
+            payload: FileSource = {
+                "buffer": audio_data,
             }
             
-            response = self.client.listen.prerecorded.v("1").transcribe_file(
-                {"buffer": audio_data},
-                options
+            options = PrerecordedOptions(
+                model="nova-2",
+                smart_format=True,
             )
+            
+            response = self.client.listen.rest.v("1").transcribe_file(payload, options)
             
             transcript = response.results.channels[0].alternatives[0].transcript
             return transcript
