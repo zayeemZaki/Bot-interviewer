@@ -342,8 +342,8 @@ class InterviewService:
             
             filename = f"temp_{uuid.uuid4()}.wav"
             
-            # Use SDK v3 REST syntax
-            self.deepgram_client.speak.rest.v("1").save(filename, {"text": sanitized_text}, options)
+            # Correct v3 syntax for TTS
+            self.deepgram_client.speak.v("1").save(filename, {"text": sanitized_text}, options)
             
             # Read the saved audio file
             with open(filename, "rb") as audio_file:

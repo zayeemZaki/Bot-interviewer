@@ -32,7 +32,8 @@ class AudioService:
                 smart_format=True,
             )
             
-            response = self.client.listen.rest.v("1").transcribe_file(payload, options)
+            # Correct v3 syntax for file upload
+            response = self.client.listen.prerecorded.v("1").transcribe_file(payload, options)
             
             transcript = response.results.channels[0].alternatives[0].transcript
             return transcript
