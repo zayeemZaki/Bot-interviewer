@@ -26,7 +26,7 @@ class InterviewService:
             raise ValueError("DEEPGRAM_API_KEY not found in environment")
         
         self.groq_client = Groq(api_key=self.groq_api_key)
-        self.deepgram_client = DeepgramClient(self.deepgram_api_key)
+        self.deepgram_client = DeepgramClient(api_key=self.deepgram_api_key)
         self.candidate_name = None
     
     def determine_phase(self, messages: List[Dict[str, str]]) -> str:
