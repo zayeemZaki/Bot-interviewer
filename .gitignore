@@ -60,22 +60,40 @@ backend/venv/
 backend/.tox/
 backend/.eggs/
 backend/*.egg-info/
+backend/.env
 
 # Byte-compiled / optimized / DLL files
 **/__pycache__/
 **/*.py[cod]
 **/*$py.class
 
+# IDE
+.idea/
+*.sublime-workspace
+*.sublime-project
+
 # Caches
 **/.cache/
+**/.pytest_cache/
+**/node_modules/
+frontend/.next/
+frontend/.turbo/
+frontend/coverage/
 
 # Docker
 **/.dockerignore
 **/docker-compose.override.yml
 
-# Misc
+# OS files
+.DS_Store
+Thumbs.db
 *.swp
 *.swo
 *.tmp
 *.temp
 **/~$*
+
+# npm/yarn
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

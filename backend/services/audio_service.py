@@ -4,7 +4,8 @@ Handles speech-to-text (STT) using Deepgram.
 """
 
 import os
-from deepgram import DeepgramClient, PrerecordedOptions, FileSource
+from deepgram import DeepgramClient
+from deepgram.types import FileSource, PrerecordedOptions
 from typing import Optional
 
 
@@ -23,9 +24,7 @@ class AudioService:
         if not audio_data or len(audio_data) == 0:
             raise ValueError("Empty audio file provided")
                 
-        payload: FileSource = {
-            "buffer": audio_data,
-        }
+        payload = FileSource(buffer=audio_data)
         
         options = PrerecordedOptions(
             model="nova-2",
