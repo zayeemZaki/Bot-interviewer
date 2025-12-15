@@ -29,6 +29,8 @@ interface Feedback {
 
 type Step = "setup" | "interview" | "feedback";
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export default function Home() {
 
   const [step, setStep] = useState<Step>("setup");
@@ -125,7 +127,7 @@ export default function Home() {
     try {
       chatAbortControllerRef.current = new AbortController();
 
-      const response = await axios.post("http://localhost:8000/chat", {
+      const response = await axios.post(`${API_BASE_URL}/chat`, {
         resume_text: resume,
         job_description: jobDescription,
         messages: newHistory,
@@ -176,7 +178,7 @@ export default function Home() {
       
       transcribeAbortControllerRef.current = new AbortController();
       
-      const response = await axios.post("http://localhost:8000/transcribe", formData, {
+      const response = await axios.post(`${API_BASE_URL}/transcribe`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
         signal: transcribeAbortControllerRef.current.signal,
       });
@@ -279,7 +281,7 @@ export default function Home() {
     try {
       feedbackAbortControllerRef.current = new AbortController();
 
-      const response = await axios.post("http://localhost:8000/feedback", {
+      const response = await axios.post(`${API_BASE_URL}/feedback`, {
         resume_text: resume,
         job_description: jobDescription,
         candidate_name: name,
@@ -319,7 +321,7 @@ export default function Home() {
 
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:8000/process-pdf", formData, {
+      const response = await axios.post(`${API_BASE_URL}/process-pdf`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
