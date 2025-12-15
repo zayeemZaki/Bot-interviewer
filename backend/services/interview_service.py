@@ -10,7 +10,7 @@ import json
 import re
 from typing import List, Dict, Optional, Tuple
 from groq import Groq
-from deepgram import DeepgramClient, SpeakRestOptions
+from deepgram import DeepgramClient
 
 
 class InterviewService:
@@ -336,11 +336,11 @@ class InterviewService:
         try:
             sanitized_text = self._sanitize_for_speech(text)
             
-            options = SpeakRestOptions(
-                model="aura-asteria-en",
-                encoding="linear16",
-                container="wav"
-            )
+            options = {
+                "model": "aura-asteria-en",
+                "encoding": "linear16",
+                "container": "wav"
+            }
             
             filename = f"temp_{uuid.uuid4()}.wav"
             self.deepgram_client.speak.rest.v("1").save(filename, {"text": sanitized_text}, options)
