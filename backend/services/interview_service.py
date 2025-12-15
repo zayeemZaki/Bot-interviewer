@@ -10,7 +10,7 @@ import json
 import re
 from typing import List, Dict, Optional, Tuple
 from groq import Groq
-from deepgram import DeepgramClient, SpeakOptions
+from deepgram import DeepgramClient, SpeakRestOptions
 
 
 class InterviewService:
@@ -336,7 +336,7 @@ class InterviewService:
         try:
             sanitized_text = self._sanitize_for_speech(text)
             
-            options = SpeakOptions(
+            options = SpeakRestOptions(
                 model="aura-asteria-en",
                 encoding="linear16",
                 container="wav"
