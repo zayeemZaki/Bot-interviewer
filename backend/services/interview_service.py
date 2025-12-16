@@ -259,10 +259,13 @@ class InterviewService:
 
         self.candidate_name = candidate_name
         
+        # Extract first name only for natural conversation
+        first_name = candidate_name.split()[0] if candidate_name else "Candidate"
+        
         phase = self.determine_phase(messages)
         
         system_prompt = self.build_interview_system_prompt(
-            job_description, resume_text, candidate_name, difficulty, phase
+            job_description, resume_text, first_name, difficulty, phase
         )
         
         api_messages_copy = messages.copy()
@@ -270,7 +273,7 @@ class InterviewService:
             original_content = api_messages_copy[-1]["content"]
             api_messages_copy[-1] = {
                 "role": "user",
-                "content": f"[System verified name: {candidate_name}] {original_content}"
+                "content": f"[System verified name: {first_name}] {original_content}"
             }
         
         api_messages = [{"role": "system", "content": system_prompt}] + api_messages_copy

@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { CheckCircle2, AlertCircle, Download, Home } from "lucide-react";
+import { CheckCircle2, AlertCircle, Home } from "lucide-react";
 
 interface Feedback {
   rating: number;
@@ -203,19 +203,11 @@ export default function ReportCard({ feedback, onRestart }: ReportCardProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
-            className="flex flex-col sm:flex-row gap-3 pt-4"
+            className="pt-4"
           >
             <button
-              onClick={() => window.print()}
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-white border-2 border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 hover:border-slate-400 transition-all"
-            >
-              <Download className="w-5 h-5" />
-              Download PDF
-            </button>
-            
-            <button
               onClick={onRestart}
-              className="w-full sm:flex-1 px-6 py-3 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-all"
+              className="w-full px-6 py-3 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-all"
             >
               Start New Interview
             </button>
