@@ -285,7 +285,8 @@ class InterviewService:
                 stream=False,
             )
             
-            return completion.choices[0].message.content
+            raw_response = completion.choices[0].message.content
+            return self._clean_response_text(raw_response)
             
         except Exception as e:
             raise Exception(f"Groq API call failed: {str(e)}")
@@ -331,6 +332,19 @@ class InterviewService:
             text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
         
         return text
+    
+    def _clean_response_text(self, text: str) -> str:
+        """
+        Clean AI-generated response text by removing Markdown artifacts and filler text.
+        """
+        import re
+        # Remove bold/italic markers (* or **)
+        text = re.sub(r'\*+', '', text)
+        # Remove headers (###)
+        text = re.sub(r'#+\s', '', text)
+        # Remove strict "Awaiting response" meta-text if it appears
+        text = re.sub(r'\[.*?\]', '', text) 
+        return text.strip()
     
     def text_to_speech(self, text: str) -> Optional[str]:
         try:
