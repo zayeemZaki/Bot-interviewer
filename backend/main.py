@@ -36,6 +36,18 @@ class InterviewContext(BaseModel):
     messages: List[dict]
     difficulty: str = "medium"
 
+@app.get("/health")
+async def health_check():
+    """
+    Health check endpoint to verify the service is running.
+    Returns status and service information.
+    """
+    return {
+        "status": "healthy",
+        "service": "AI Interview Bot",
+        "version": "1.0.0"
+    }
+
 @app.post("/chat")
 async def chat_endpoint(context: InterviewContext):
     """
