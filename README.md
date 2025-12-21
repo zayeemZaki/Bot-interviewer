@@ -10,7 +10,7 @@ An AI-powered interview preparation platform that helps candidates practice tech
 - Adaptive difficulty levels that progress from easy to medium to hard questions
 - Phase-based interview structure covering introduction, technical questions, behavioral questions, and wrap-up
 - Real-time audio with click-to-toggle microphone and automatic transcription
-- AI interviewer powered by Groq's llama-3.1-8b-instant model
+- AI interviewer powered by Groq's Llama 3.1 for sub-second inference
 - Professional performance feedback with scoring and improvement suggestions
 
 ### User Interface
@@ -21,8 +21,8 @@ An AI-powered interview preparation platform that helps candidates practice tech
 - Smooth animations using Framer Motion
 
 ### Audio Pipeline
-- Speech-to-text transcription via Deepgram with high accuracy
-- Text-to-speech responses for the AI interviewer
+- Speech-to-text transcription via Deepgram Nova-2 with high accuracy
+- Text-to-speech responses via Deepgram Aura for natural flow
 - Audio recording using the MediaRecorder API with blob-to-base64 conversion
 - Playback functionality with the ability to interrupt the AI
 
@@ -64,6 +64,13 @@ npm run dev
 ```
 
 The frontend will run on http://localhost:3000
+
+## The Stack
+
+- **Brain**: Groq + Llama 3.1 for sub-second inference
+- **Ears/Mouth**: Deepgram Nova-2 (STT) and Aura (TTS) for natural flow
+- **Orchestrator**: FastAPI managing a phase-based state machine
+- **Refinery**: A custom regex layer to fix phonetic pronunciation and strip markdown
 
 ## Documentation
 
