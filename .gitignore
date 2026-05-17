@@ -104,3 +104,16 @@ Thumbs.db
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
+
+# Local ignores added by assistant: keep local envs, build artifacts and OS files out of commits
+.venv/
+backend/venv/
+frontend/node_modules/
+node_modules/
+.env.local
+.env.*
+.next/
+.cache/
+.python-version
+.DS_Store
+.pytest_cache/
